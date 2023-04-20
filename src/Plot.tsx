@@ -43,7 +43,7 @@ const PlotComponent = () => {
   return (
     <div>
       <label htmlFor="rParam">r:</label>
-      <input type="number" id="rParam" value={rVal} onChange={handleChange} />
+      <input type="number" step="0.01" id="rParam" value={rVal} onChange={handleChange} />
       <div id="plot"></div>
     </div>
   );
