@@ -269,15 +269,15 @@ impl CSSim {
                                  / self.a_params.tau_inact);
 
             self.voltage[ts] = self.voltage[ts-1]
-                             + self.g_l * (self.stim[stim_id].1 - self.e_l)
+                             + self.g_l * (self.stim[stim_id-1].1 - self.e_l)
                              + self.na_params.g_max * self.na_act_probs[ts].powf(3.0)
                              * self.na_inact_probs[ts]
-                             * (self.stim[stim_id].1 - self.na_params.e_rev)
+                             * (self.stim[stim_id-1].1 - self.na_params.e_rev)
                              + self.k_params.g_max * self.k_probs[ts].powf(4.0)
-                             * (self.stim[stim_id].1 - self.k_params.e_rev)
+                             * (self.stim[stim_id-1].1 - self.k_params.e_rev)
                              + self.a_params.g_max * self.a_act_probs[ts].powf(3.0)
                              * self.a_inact_probs[ts]
-                             * (self.stim[stim_id].1 - self.a_params.e_rev)
+                             * (self.stim[stim_id-1].1 - self.a_params.e_rev)
         }
     }
 
@@ -292,6 +292,54 @@ impl CSSim {
 }
 
 fn main() {
+
+    let na_params = NaParams::from(
+        1.2,
+        55.0,
+        0.38,
+        15.2,
+        0.266,
+        3.8,
+        -29.7,
+        -0.1,
+        -0.0556,
+        -54.7,
+        -0.05,
+        -48.0,
+        -0.1,
+        -18.0);
+
+    let k_params = KParams::from(
+        0.2,
+        -72.0,
+        0.02,
+        0.25,
+        -45.7,
+        -0.1,
+        -0.0125,
+        -55.7);
+
+    let a_params = AParams::from(
+        0.477,
+        -75.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0);
+
+    let mut cs_sim = CSSim::from(
+        200,
+        vec![(0.0, 0.0)],
+        0.003,
+        -17.0,
+        na_params,
+        k_params,
+        a_params);
+
+    println!("before run");
+    cs_sim.run();
+    println!("after run");
+
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![greet, plot_logistic_map])
         .run(tauri::generate_context!())
