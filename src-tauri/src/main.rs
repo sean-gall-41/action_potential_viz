@@ -22,6 +22,154 @@ pub fn logistic_map(r: f32, x: f32) -> f32 {
     r * x * (1.0 - x)
 }
 
+pub struct NaParams {
+    pub g_max: f32,
+    pub e_rev: f32,
+    pub init_act_open_rate: f32,
+    pub init_act_close_rate: f32,
+    pub act_open_rate: f32,
+    pub act_close_rate: f32,
+    pub init_inact_open_rate: f32,
+    pub init_inact_close_rate: f32,
+    pub inact_open_rate: f32,
+    pub inact_close_rate: f32,
+    pub open_exp_const: f32,
+    pub close_exp_const: f32
+}
+
+impl NaParams {
+    pub fn from(
+        g_max: f32,
+        e_rev: f32,
+        init_act_open_rate: f32,
+        init_act_close_rate: f32,
+        init_inact_open_rate: f32,
+        init_inact_close_rate: f32,
+        open_exp_const: f32,
+        close_exp_const: f32) -> Self {
+        NaParams {
+            g_max: g_max,
+            e_rev: e_rev,
+            init_act_open_rate: init_act_open_rate,
+            init_act_close_rate: init_act_close_rate,
+            act_open_rate: init_act_close_rate,
+            act_close_rate: init_act_close_rate,
+            init_inact_open_rate: init_inact_open_rate,
+            init_inact_close_rate: init_inact_close_rate,
+            inact_open_rate: init_inact_close_rate,
+            inact_close_rate: init_inact_close_rate,
+            open_exp_const: open_exp_const,
+            close_exp_const: close_exp_const
+        }
+    }
+
+    pub fn update_trans_rates(&mut self, voltage: f32) {
+        self.act_open_rate = self.init_act_open_rate
+                       * (self.open_exp_const * voltage).exp();
+        self.act_close_rate = self.init_act_close_rate
+                        * (self.close_exp_const * voltage).exp();
+
+        self.inact_open_rate = self.init_inact_open_rate
+                       * (self.open_exp_const * voltage).exp();
+        self.inact_close_rate = self.init_inact_close_rate
+                        * (self.close_exp_const * voltage).exp();
+    }
+}
+
+pub struct KParams {
+    pub g_max: f32,
+    pub e_rev: f32,
+    pub init_open_rate: f32,
+    pub init_close_rate: f32,
+    pub open_rate: f32,
+    pub close_rate: f32,
+    pub open_exp_const: f32,
+    pub close_exp_const: f32
+}
+
+impl KParams {
+    pub fn from(
+        g_max: f32,
+        e_rev: f32,
+        init_open_rate: f32,
+        init_close_rate: f32,
+        open_exp_const: f32,
+        close_exp_const: f32) -> Self {
+        KParams {
+            g_max: g_max,
+            e_rev: e_rev,
+            init_open_rate: init_open_rate,
+            init_close_rate: init_close_rate,
+            open_rate: init_close_rate,
+            close_rate: init_close_rate,
+            open_exp_const: open_exp_const,
+            close_exp_const: close_exp_const
+        }
+    }
+
+    pub fn update_trans_rates(&mut self, voltage: f32) {
+        self.open_rate = self.init_open_rate
+                       * (self.open_exp_const * voltage).exp();
+        self.close_rate = self.init_close_rate
+                        * (self.close_exp_const * voltage).exp();
+
+    }
+}
+
+pub struct AParams {
+    pub g_max: f32,
+    pub e_rev: f32,
+    pub init_act_open_rate: f32,
+    pub init_act_close_rate: f32,
+    pub act_open_rate: f32,
+    pub act_close_rate: f32,
+    pub init_inact_open_rate: f32,
+    pub init_inact_close_rate: f32,
+    pub inact_open_rate: f32,
+    pub inact_close_rate: f32,
+    pub open_exp_const: f32,
+    pub close_exp_const: f32
+}
+
+impl AParams {
+    pub fn from(
+        g_max: f32,
+        e_rev: f32,
+        init_act_open_rate: f32,
+        init_act_close_rate: f32,
+        init_inact_open_rate: f32,
+        init_inact_close_rate: f32,
+        open_exp_const: f32,
+        close_exp_const: f32) -> Self {
+        AParams {
+            g_max: g_max,
+            e_rev: e_rev,
+            init_act_open_rate: init_act_open_rate,
+            init_act_close_rate: init_act_close_rate,
+            act_open_rate: init_act_close_rate,
+            act_close_rate: init_act_close_rate,
+            init_inact_open_rate: init_inact_open_rate,
+            init_inact_close_rate: init_inact_close_rate,
+            inact_open_rate: init_inact_close_rate,
+            inact_close_rate: init_inact_close_rate,
+            open_exp_const: open_exp_const,
+            close_exp_const: close_exp_const
+        }
+    }
+
+    pub fn update_trans_rates(&mut self, voltage: f32) {
+        self.act_open_rate = self.init_act_open_rate
+                       * (self.open_exp_const * voltage).exp();
+        self.act_close_rate = self.init_act_close_rate
+                        * (self.close_exp_const * voltage).exp();
+
+        self.inact_open_rate = self.init_inact_open_rate
+                       * (self.open_exp_const * voltage).exp();
+        self.inact_close_rate = self.init_inact_close_rate
+                        * (self.close_exp_const * voltage).exp();
+    }
+}
+
 /*
  * definition of the Connor-Stevens Model
  *  includes:
@@ -35,12 +183,9 @@ pub struct CSSim {
     pub stim: Vec<(f32, f32)>,
     pub g_l: f32,
     pub e_l: f32,
-    pub g_na: f32,
-    pub e_na: f32,
-    pub g_k: f32,
-    pub e_k: f32,
-    pub g_a: f32,
-    pub e_a: f32,
+    pub na_params: NaParams,
+    pub k_params: KParams,
+    pub a_params: AParams,
     pub na_act_probs: Vec<f32>,
     pub na_inact_probs: Vec<f32>,
     pub k_probs: Vec<f32>,
@@ -55,82 +200,73 @@ impl CSSim {
         stim: Vec<(f32, f32)>,
         g_l: f32,
         e_l: f32,
-        g_na: f32,
-        e_na: f32,
-        g_k: f32,
-        e_k: f32,
-        g_a: f32,
-        e_a: f32,
-    ) -> Self {
+        na_params: NaParams,
+        k_params: KParams,
+        a_params: AParams) -> Self {
         CSSim {
             num_ts: num_ts,
-            stim: vec![(0.0, -60.0), (50.0, 0.0), (100, -60.0)],
+            stim: vec![(0.0, -60.0), (50.0, 0.0), (100.0, -60.0)],
             g_l: g_l,
             e_l: e_l,
-            g_na: g_na,
-            e_na: e_na,
-            g_k: g_k,
-            e_k: e_k,
-            g_a: g_a,
-            e_a: e_a,
-            na_act_probs: vec![0.0; num_ts],
-            na_inact_probs: vec![0.0; num_ts],
-            k_probs: vec![0.0; num_ts],
-            a_act_probs: vec![0.0; num_ts],
-            a_inact_probs: vec![0.0; num_ts],
-            voltage: vec![0.0; num_ts]
+            na_params: na_params,
+            k_params: k_params,
+            a_params: a_params,
+            na_act_probs: vec![0.0; num_ts as usize],
+            na_inact_probs: vec![0.0; num_ts as usize],
+            k_probs: vec![0.0; num_ts as usize],
+            a_act_probs: vec![0.0; num_ts as usize],
+            a_inact_probs: vec![0.0; num_ts as usize],
+            voltage: vec![0.0; num_ts as usize]
         }
     }
 
-    pub update_probs(&mut self, voltage: f32) {
-        todo!("IMPLEMENT THIS FUNCTION");
-    }
-
-    pub run(&mut self) {
+    pub fn run(&mut self) {
         let mut stim_id: usize = 0;
         for ts in 1..self.num_ts {
             if stim_id < self.stim.len() && (ts-1) == (self.stim[stim_id].0) as u32 {
-                self.update_probs(self.stim[stim_id].1);
+                self.na_params.update_trans_rates(self.stim[stim_id].1);
+                self.k_params.update_trans_rates(self.stim[stim_id].1);
+                self.a_params.update_trans_rates(self.stim[stim_id].1);
                 stim_id += 1;
             }
             let ts: usize = ts as usize;
 
             self.na_act_probs[ts] = self.na_act_probs[ts-1]
-                                  + (1.0 - self.na_act_probs[ts-1])
-                                  - self.na_act_probs[ts-1];
+                                  + (1.0 - self.na_act_probs[ts-1]) * self.na_params.act_open_rate
+                                  - self.na_act_probs[ts-1] * self.na_params.act_close_rate;
 
             self.na_inact_probs[ts] = self.na_inact_probs[ts-1]
-                                  + (1.0 - self.na_inact_probs[ts-1])
-                                  - self.na_inact_probs[ts-1];
+                                  + (1.0 - self.na_inact_probs[ts-1]) * self.na_params.inact_open_rate
+                                  - self.na_inact_probs[ts-1] * self.na_params.inact_close_rate;
 
             self.k_probs[ts] = self.k_probs[ts-1]
-                                  + (1.0 - self.k_probs[ts-1])
-                                  - self.k_probs[ts-1];
+                                  + (1.0 - self.k_probs[ts-1]) * self.k_params.open_rate
+                                  - self.k_probs[ts-1] * self.k_params.close_rate;
 
             self.a_act_probs[ts] = self.a_act_probs[ts-1]
-                                 + (1.0 - self.a_act_probs[ts-1])
-                                 - self.a_act_probs[ts-1];
+                                 + (1.0 - self.a_act_probs[ts-1]) * self.a_params.act_open_rate
+                                 - self.a_act_probs[ts-1] * self.a_params.act_close_rate;
 
             self.a_inact_probs[ts] = self.a_inact_probs[ts-1]
-                                  + (1.0 - self.a_inact_probs[ts-1])
-                                  - self.a_inact_probs[ts-1];
+                                  + (1.0 - self.a_inact_probs[ts-1]) * self.a_params.inact_open_rate
+                                  - self.a_inact_probs[ts-1] * self.a_params.inact_close_rate;
 
             self.voltage[ts] = self.voltage[ts-1]
                              + self.g_l * (self.stim[stim_id].1 - self.e_l)
-                             + self.g_na * self.na_act_probs[ts].powf(3.0)
+                             + self.na_params.g_max * self.na_act_probs[ts].powf(3.0)
                              * self.na_inact_probs[ts]
-                             * (self.stim[stim_id].1 - self.e_na)
-                             + self.g_k * self.k_probs[ts].powf(4.0)
-                             * (self.stim[stim_id].1 - self.e_k)
-                             + self.g_a * self.a_act_probs[ts].powf(3.0)
+                             * (self.stim[stim_id].1 - self.na_params.e_rev)
+                             + self.k_params.g_max * self.k_probs[ts].powf(4.0)
+                             * (self.stim[stim_id].1 - self.k_params.e_rev)
+                             + self.a_params.g_max * self.a_act_probs[ts].powf(3.0)
                              * self.a_inact_probs[ts]
-                             * (self.stim[stim_id].1 - self.e_a)
+                             * (self.stim[stim_id].1 - self.a_params.e_rev)
         }
     }
 
-    pub plot(&self) -> Vec<(f32, f32)> {
-        let mut v_plot: Vec<(f32, f32)> = vec![(0.0, 0.0); self.num_ts];
-        for ts in 0..self.num_ts {
+    pub fn plot(&self) -> Vec<(f32, f32)> {
+        let mut v_plot: Vec<(f32, f32)> = vec![(0.0, 0.0); self.num_ts as usize];
+        for ts in 0..self.num_ts as usize {
             v_plot[ts].0 = ts as f32;
             v_plot[ts].1 = self.voltage[ts];
         }
