@@ -14,35 +14,54 @@
   </head>
 
   <body>
-    <div class="container">
-      <h1>Welcome to Tauri!</h1>
-
-      <div class="row">
-        <a href="https://tauri.app" target="_blank">
-          <img src="/assets/tauri.svg" class="logo tauri" alt="Tauri logo" />
-        </a>
-        <a
-          href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"
-          target="_blank"
-        >
-          <img
-            src="/assets/javascript.svg"
-            class="logo vanilla"
-            alt="JavaScript logo"
-          />
-        </a>
-      </div>
-
-      <p>Click on the Tauri logo to learn more about the framework</p>
-
-      <div class="row">
-        <div>
-          <input id="greet-input" placeholder="Enter a name..." />
-          <button id="greet-button" type="button">Greet</button>
+    <main>
+      <section class="simulation">
+        <div class="params">
+          <div class="leak-param-sec">
+            <div class="param">
+              <label for="g-leak-max">g leak</label>
+              <input type="number" id="g-leak-max">
+            </div>
+            <div class="param">
+              <label for="e-leak">E leak</label>
+              <input type="number" id="e-leak">
+            </div>
+          </div>
+          <div class="na-param-sec">
+            <div class="param">
+              <label for="g-na-max">g na</label>
+              <input type="number" id="g-na-max">
+            </div>
+            <div class="param">
+              <label for="e-na">E Na</label>
+              <input type="number" id="e-na">
+            </div>
+          </div>
+          <div class="k-param-sec">
+            <div class="param">
+              <label for="g-k-max">g k</label>
+              <input type="number" id="g-k-max">
+            </div>
+            <div class="param">
+              <label for="e-k">E K</label>
+              <input type="number" id="e-k">
+            </div>
+          </div>
+          <div class="a-param-sec">
+            <div class="param">
+              <label for="g-a-max">g a</label>
+              <input type="number" id="g-a-max">
+            </div>
+            <div class="param">
+              <label for="e-a">E a</label>
+              <input type="number" id="e-a">
+            </div>
+          </div>
         </div>
-      </div>
-
-      <p id="greet-msg"></p>
-    </div>
+        <div class="canvas" id="canvas">
+          <canvas id="plotting-area" width="400" height="400"></canvas>
+        </div>
+      </section>
+    </main>
   </body>
 </html>
