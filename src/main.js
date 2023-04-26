@@ -16,12 +16,12 @@ const plotAreaWrapper = document.getElementById('canvas');
 const ctx = plotArea.getContext('2d');
 
 let num_ts = 200; // in ms
-let stim = [[0, 10.0]];
-let g_l = 0.003;
+let stim = [[0, 9.0], [10000, 20.0]];
+let g_l = 0.3;
 let e_l = -17.0;
 
 let na_params = {
-  g_max: 1.2,
+  g_max: 120.0,
   e_rev: 55.0,
   act_open_scale: 0.38,
   act_close_scale: 15.2,
@@ -42,7 +42,7 @@ let na_params = {
 };
 
 let k_params = {
-  g_max: 0.2,
+  g_max: 20.0,
   e_rev: -72.0,
   open_scale: 0.02,
   close_scale: 0.25,
@@ -55,7 +55,7 @@ let k_params = {
 };
 
 let a_params = {
-  g_max: 0.477,
+  g_max: 47.7,
   e_rev: -75.0,
   tau_act: 0.0,
   inf_act: 0.0,
@@ -106,7 +106,7 @@ async function invoke_plot_command() {
       ctx.beginPath();
       plot.forEach(([ts, v_val]) => {
         let x = (ts / plot.length) * plotArea.width;
-        let y = -v_val + 300;
+        let y = -v_val + 200;
         ctx.lineTo(x, y);
       });
       ctx.stroke();

@@ -120,15 +120,16 @@ fn run_and_plot(
     let mut a_act_prob = 0.0559f32;
     let mut a_inact_prob = 0.2175f32;
     let mut voltage = -64.453f32;
+    let mem_c = 1.0f32;
 
     let mut stim_id = 0usize;
     for ts in 0..numts {
         if stim_id < stim.len() && ts == (stim[stim_id].0) as u32 {
-            na_params.update_trans_rates(stim[stim_id].1);
-            k_params.update_trans_rates(stim[stim_id].1);
-            a_params.update_trans_rates(stim[stim_id].1);
             stim_id += 1;
         }
+        na_params.update_trans_rates(voltage);
+        k_params.update_trans_rates(voltage);
+        a_params.update_trans_rates(voltage);
         let ts: usize = ts as usize;
     
         na_act_prob += ((1.0 - na_act_prob) * na_params.act_open_rate
@@ -145,19 +146,17 @@ fn run_and_plot(
     
         a_inact_prob += 0.01 * (a_params.inf_inact - a_inact_prob) / a_params.tau_inact;
 
-        voltage += (-g_l * (voltage - e_l)
-                - na_params.g_max * na_act_prob.powf(3.0)
-                * na_inact_prob
-                * (voltage - na_params.e_rev)
-                - k_params.g_max * k_prob.powf(4.0)
-                * (voltage - k_params.e_rev)
-                - a_params.g_max * a_act_prob.powf(3.0)
-                * a_inact_prob
-                * (voltage - a_params.e_rev)) * 0.01;
+        voltage += (
+                -g_l * (voltage - e_l)
+                - na_params.g_max * na_act_prob.powf(3.0) * na_inact_prob * (voltage - na_params.e_rev)
+                - k_params.g_max * k_prob.powf(4.0) * (voltage - k_params.e_rev)
+                - a_params.g_max * a_act_prob.powf(3.0) * a_inact_prob * (voltage - a_params.e_rev)
+                + stim[stim_id-1].1
+                ) * 0.01;
+        voltage /= mem_c;
 
         v_plot[ts].0 = ts as f32;
         v_plot[ts].1 = voltage;
-        println!("v: {voltage}");
     }
     v_plot
 }
