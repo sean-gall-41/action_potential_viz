@@ -23,17 +23,16 @@ let e_l = -17.0;
 let na_params = {
   g_max: 1.2,
   e_rev: 55.0,
-  init_act_open_rate: 0.38,
-  init_act_close_rate: 15.2,
-  act_open_rate: 0.38,
-  act_close_rate: 15.2,
-  init_inact_open_rate: 0.266,
-  init_inact_close_rate: 3.8,
-  inact_open_rate: 0.266,
-  inact_close_rate: 3.8,
+  act_open_scale: 0.38,
+  act_close_scale: 15.2,
+  act_open_rate: 0.0,
+  act_close_rate: 0.0,
+  inact_open_scale: 0.266,
+  inact_close_scale: 3.8,
+  inact_open_rate: 0.0,
+  inact_close_rate: 0.0,
   act_v_offset_open: -29.7,
   act_pre_v_fact_open: -0.1,
-
   close_act_exp_const: -0.0556,
   act_v_offset_close: -54.7,
   open_inact_exp_const: -0.05,
@@ -45,10 +44,10 @@ let na_params = {
 let k_params = {
   g_max: 0.2,
   e_rev: -72.0,
-  init_open_rate: 0.02,
-  init_close_rate: 0.25,
-  open_rate: 0.02,
-  close_rate: 0.25,
+  open_scale: 0.02,
+  close_scale: 0.25,
+  open_rate: 0.0,
+  close_rate: 0.0,
   v_offset_open: -45.7,
   pre_v_fact_open: -0.1,
   exp_const_close: -0.0125,
@@ -104,24 +103,17 @@ async function invoke_plot_command() {
       plotArea.width = plotAreaWrapper.getBoundingClientRect().width;
       ctx.strokeStyle = 'green';
       ctx.lineWidth = 0.5;
-      console.log(plot);
-      //ctx.beginPath();
-      //plot.forEach(([ts, v_val]) => {
-      //  let x = (ts / plot.length) * plotArea.width;
-      //  let y = v_val;
-      //  ctx.lineTo(x, y);
-      //});
-      //ctx.stroke();
+      ctx.beginPath();
+      plot.forEach(([ts, v_val]) => {
+        let x = (ts / plot.length) * plotArea.width;
+        let y = -v_val + 300;
+        ctx.lineTo(x, y);
+      });
+      ctx.stroke();
     }).catch((error) => console.error(error));
 }
 
 window.addEventListener("DOMContentLoaded", () => {
   setDefaultParams();
   invoke_plot_command();
-
-  //greetInputEl = document.querySelector("#greet-input");
-  //greetMsgEl = document.querySelector("#greet-msg");
-  //document
-  //  .querySelector("#greet-button")
-  //  .addEventListener("click", () => greet());
 });
