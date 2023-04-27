@@ -41,8 +41,8 @@
         "fullscreen": false,
         "resizable": true,
         "title": "action_potential_viz",
-        "width": 800,
-        "height": 600
+        "width": 900,
+        "height": 600 
       }
     ]
   }

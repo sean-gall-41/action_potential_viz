@@ -1,6 +1,6 @@
 const { invoke } = window.__TAURI__.tauri;
 
-const defaultParams = {
+const defaultModelParams = {
   "g-leak-max": 0.003,
   "e-leak": -17.0,
   "g-na-max": 1.2,
@@ -16,7 +16,7 @@ const plotAreaWrapper = document.getElementById('canvas');
 const ctx = plotArea.getContext('2d');
 
 let num_ts = 200; // in ms
-let stim = [[0, 9.0], [10000, 20.0]];
+let stim = [[0, 0.0], [5000, 20.0], [15000, 0.0]];
 let g_l = 0.3;
 let e_l = -17.0;
 
@@ -63,7 +63,7 @@ let a_params = {
   inf_inact: 0.0
 };
 
-async function setDefaultParams() {
+async function setDefaultModelParams() {
   let g_l = document.getElementById("g-leak-max");
   let e_l = document.getElementById("e-leak");
 
@@ -76,17 +76,17 @@ async function setDefaultParams() {
   let g_a = document.getElementById("g-a-max");
   let e_a = document.getElementById("e-a");
 
-  g_l.defaultValue = defaultParams["g-leak-max"];
-  e_l.defaultValue = defaultParams["e-leak"];
+  g_l.defaultValue = defaultModelParams["g-leak-max"];
+  e_l.defaultValue = defaultModelParams["e-leak"];
 
-  g_na.defaultValue = defaultParams["g-na-max"];
-  e_na.defaultValue = defaultParams["e-na"];
+  g_na.defaultValue = defaultModelParams["g-na-max"];
+  e_na.defaultValue = defaultModelParams["e-na"];
 
-  g_k.defaultValue = defaultParams["g-k-max"];
-  e_k.defaultValue = defaultParams["e-k"];
+  g_k.defaultValue = defaultModelParams["g-k-max"];
+  e_k.defaultValue = defaultModelParams["e-k"];
 
-  g_a.defaultValue = defaultParams["g-a-max"];
-  e_a.defaultValue = defaultParams["e-a"];
+  g_a.defaultValue = defaultModelParams["g-a-max"];
+  e_a.defaultValue = defaultModelParams["e-a"];
 }
 
 async function invoke_plot_command() {
@@ -100,13 +100,15 @@ async function invoke_plot_command() {
       kParams: k_params,
       aParams: a_params
     }).then((plot) => {
+      let abs_min_y = Math.abs(Math.min(...plot.map((row) => row[1])));
       plotArea.width = plotAreaWrapper.getBoundingClientRect().width;
-      ctx.strokeStyle = 'green';
+      plotArea.height = plotAreaWrapper.getBoundingClientRect().height;
+      ctx.strokeStyle = '#bfbfff';
       ctx.lineWidth = 0.5;
       ctx.beginPath();
       plot.forEach(([ts, v_val]) => {
         let x = (ts / plot.length) * plotArea.width;
-        let y = -v_val + 200;
+        let y = -(v_val + abs_min_y) * 0.004 * plotArea.height + 0.70 * plotArea.height;
         ctx.lineTo(x, y);
       });
       ctx.stroke();
@@ -114,6 +116,8 @@ async function invoke_plot_command() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  setDefaultParams();
+  setDefaultModelParams();
   invoke_plot_command();
 });
+
+window.addEventListener("resize", () => invoke_plot_command());
