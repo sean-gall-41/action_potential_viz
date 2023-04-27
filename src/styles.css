@@ -1,7 +1,7 @@
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 26px;
   font-weight: 400;
 
   color: #f6f6f6;
@@ -27,13 +27,48 @@
   background: #5f5f5f;
   border-radius: 0.2rem;
   margin: 0.1rem;
-  padding: 0.5rem 0.5rem;
+  padding: 0.2rem 0.2rem;
+}
+
+.model-params {
+  background: #3f3f3f;
+  border-radius: 0.2rem;
+  margin: 0.2rem;
+}
+
+.model-params .row {
+  display: flex;
+}
+
+.model-params .row h3 {
+  margin: 0.2rem;
+  padding-left: 0.5rem;
+}
+
+.stim-params {
+  background: #3f3f3f;
+  border-radius: 0.2rem;
+  margin: 0.2rem;
+}
+
+.stim-params .row {
+  display: flex;
+  justify-content: center;
+}
+
+.stim-params .row h3 {
+  margin: 0.2rem;
 }
 
 .param {
   display: flex;
+  justify-content: center;
   margin: 0.5rem;
   padding: 0.5rem 0.3rem;
+}
+
+.params input {
+  width: 30%;
 }
 
 .canvas {
