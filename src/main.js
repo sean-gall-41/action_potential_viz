@@ -1,13 +1,13 @@
 const { invoke } = window.__TAURI__.tauri;
 
 const defaultModelParams = {
-  "g-leak-max": 0.003,
+  "g-leak-max": 0.3,
   "e-leak": -17.0,
-  "g-na-max": 1.2,
+  "g-na-max": 120.0,
   "e-na": 55.0,
-  "g-k-max": 0.2,
+  "g-k-max": 20.0,
   "e-k": -72.0,
-  "g-a-max": 0.477,
+  "g-a-max": 47.7,
   "e-a": -75.0
 };
 
@@ -63,6 +63,47 @@ let a_params = {
   inf_inact: 0.0
 };
 
+function handleInputChange(element) {
+  const id = element.id;
+  const pcs = id.split("-");
+  
+  const var_type = pcs[0];
+  let var_name = "";
+  if (var_type === "g") {
+    var_name = var_type + "_max";
+  } else if (var_type === "e") {
+    var_name = var_type + "_rev";
+  }
+
+  switch (pcs[1]) {
+    case "leak":
+      if (var_type === "g") {
+        g_l = +element.value;
+      } else if (var_type === "e") {
+        e_l = +element.value;
+      }
+      break;
+    case "na":
+      na_params[var_name] = +element.value;
+      break;
+    case "k":
+      k_params[var_name] = +element.value;
+      break;
+    case "a":
+      a_params[var_name] = +element.value;
+      break;
+    case "0":
+      console.log("stimulus 0");
+      break;
+    case "1":
+      console.log("stimulus 1");
+      break;
+    default:
+      console.error("bad programmer is bad");
+  }
+  invoke_plot_command();
+}
+
 async function setDefaultModelParams() {
   let g_l = document.getElementById("g-leak-max");
   let e_l = document.getElementById("e-leak");
@@ -76,6 +117,9 @@ async function setDefaultModelParams() {
   let g_a = document.getElementById("g-a-max");
   let e_a = document.getElementById("e-a");
 
+  let stim_0 = document.getElementById("stim-0");
+  let stim_1 = document.getElementById("stim-1");
+
   g_l.defaultValue = defaultModelParams["g-leak-max"];
   e_l.defaultValue = defaultModelParams["e-leak"];
 
@@ -87,6 +131,9 @@ async function setDefaultModelParams() {
 
   g_a.defaultValue = defaultModelParams["g-a-max"];
   e_a.defaultValue = defaultModelParams["e-a"];
+
+  stim_0.defaultValue = 0.0;
+  stim_1.defaultValue = 0.0;
 }
 
 async function invoke_plot_command() {
@@ -120,4 +167,8 @@ window.addEventListener("DOMContentLoaded", () => {
   invoke_plot_command();
 });
 
-window.addEventListener("resize", () => invoke_plot_command());
+window.addEventListener("resize", () =>invoke_plot_command());
+
+document.querySelectorAll("input").forEach((input) => {
+  input.addEventListener("change", () => handleInputChange(input));
+});
