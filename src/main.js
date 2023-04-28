@@ -124,18 +124,24 @@ function handleModelParamsInputChange(element) {
   invoke_plot_command();
 }
 
+function handleStimParamsInputChange(element) {
+  // TODO: write this function :-)
+}
+
 async function setDefaultModelParams() {
   const modelInputs = document.querySelectorAll(".model-params input");
   modelInputs.forEach((input) => {
     input.defaultValue = defaultModelParams[input.id];
   });
+  modelParamsAreDefault = true;
+}
 
+async function setDefaultStimParams() {
   let stim_0 = document.getElementById("stim-0");
   let stim_1 = document.getElementById("stim-1");
 
   stim_0.defaultValue = 0.0;
   stim_1.defaultValue = 0.0;
-  modelParamsAreDefault = true;
 }
 
 async function invoke_plot_command() {
@@ -166,6 +172,7 @@ async function invoke_plot_command() {
 
 window.addEventListener("DOMContentLoaded", () => {
   setDefaultModelParams();
+  setDefaultStimParams();
   invoke_plot_command();
 });
 
@@ -173,6 +180,10 @@ window.addEventListener("resize", () =>invoke_plot_command());
 
 document.querySelectorAll(".model-params input").forEach((input) => {
   input.addEventListener("change", () => handleModelParamsInputChange(input));
+});
+
+document.querySelectorAll(".stim-params input").forEach((input) => {
+  input.addEventListener("change", () => handleStimParamsInputChange(input));
 });
 
 document.getElementById("reset-btn").addEventListener("mouseup", () => resetModelParams());
