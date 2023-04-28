@@ -11,6 +11,8 @@ const defaultModelParams = {
   "e-a": -75.0
 };
 
+let modelParamsAreDefault;
+
 const plotArea = document.getElementById('plotting-area');
 const plotAreaWrapper = document.getElementById('canvas');
 const ctx = plotArea.getContext('2d');
@@ -20,7 +22,7 @@ let stim = [[0, 0.0], [5000, 20.0], [15000, 0.0]];
 let g_l = 0.3;
 let e_l = -17.0;
 
-let na_params = {
+const default_na_params = {
   g_max: 120.0,
   e_rev: 55.0,
   act_open_scale: 0.38,
@@ -41,7 +43,7 @@ let na_params = {
   inact_v_offset_close: -18.0
 };
 
-let k_params = {
+const default_k_params = {
   g_max: 20.0,
   e_rev: -72.0,
   open_scale: 0.02,
@@ -54,7 +56,7 @@ let k_params = {
   v_offset_close: -55.7
 };
 
-let a_params = {
+const default_a_params = {
   g_max: 47.7,
   e_rev: -75.0,
   tau_act: 0.0,
@@ -63,7 +65,30 @@ let a_params = {
   inf_inact: 0.0
 };
 
-function handleInputChange(element) {
+let na_params = {...default_na_params};
+let k_params = {...default_k_params};
+let a_params = {...default_a_params};
+
+function resetModelParams() {
+  if (!modelParamsAreDefault) {
+    // brute-force my way hee-haw
+    g_l = defaultModelParams["g-leak-max"];
+    e_l = defaultModelParams["e-leak"];
+
+    na_params = {...default_na_params};
+    k_params = {...default_k_params};
+    a_params = {...default_a_params};
+
+    const modelInputs = document.querySelectorAll(".model-params input");
+    modelInputs.forEach((input) => {
+      input.value = input.defaultValue;
+    });
+    modelParamsAreDefault = true;
+    invoke_plot_command();
+  }
+}
+
+function handleModelParamsInputChange(element) {
   const id = element.id;
   const pcs = id.split("-");
   
@@ -92,15 +117,10 @@ function handleInputChange(element) {
     case "a":
       a_params[var_name] = +element.value;
       break;
-    case "0":
-      console.log("stimulus 0");
-      break;
-    case "1":
-      console.log("stimulus 1");
-      break;
     default:
       console.error("bad programmer is bad");
   }
+  if (modelParamsAreDefault) modelParamsAreDefault = false;
   invoke_plot_command();
 }
 
@@ -134,6 +154,7 @@ async function setDefaultModelParams() {
 
   stim_0.defaultValue = 0.0;
   stim_1.defaultValue = 0.0;
+  modelParamsAreDefault = true;
 }
 
 async function invoke_plot_command() {
@@ -169,6 +190,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
 window.addEventListener("resize", () =>invoke_plot_command());
 
-document.querySelectorAll("input").forEach((input) => {
-  input.addEventListener("change", () => handleInputChange(input));
+document.querySelectorAll(".model-params input").forEach((input) => {
+  input.addEventListener("change", () => handleModelParamsInputChange(input));
 });
+
+document.getElementById("reset-btn").addEventListener("mouseup", () => resetModelParams());
+

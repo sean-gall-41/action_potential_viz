@@ -34,6 +34,11 @@ body {
   margin: 0.2rem;
 }
 
+.row {
+  margin: 0.2rem;
+  padding: 0.2rem;
+}
+
 .model-params .row {
   display: flex;
 }
@@ -67,6 +72,23 @@ body {
 
 .params input {
   width: 30%;
+}
+
+#state-btns-row {
+  justify-content: flex-end;
+}
+
+#state-btns-row button {
+  transition: transform: 0.5s;
+}
+
+#state-btns-row button:hover {
+  color: #2f2f2f;
+  background-color: #fdda0d;
+}
+
+#state-btns-row button:active {
+  transform: scale(0.9);
 }
 
 .canvas {

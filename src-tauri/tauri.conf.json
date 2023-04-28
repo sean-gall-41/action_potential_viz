@@ -42,7 +42,7 @@
         "resizable": true,
         "title": "action_potential_viz",
         "width": 900,
-        "height": 600 
+        "height": 640 
       }
     ]
   }
