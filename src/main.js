@@ -149,7 +149,7 @@ async function invoke_plot_command() {
     }).then((plot) => {
       let abs_min_y = Math.abs(Math.min(...plot.map((row) => row[1])));
       plotArea.width = plotAreaWrapper.getBoundingClientRect().width;
-      plotArea.height = plotAreaWrapper.getBoundingClientRect().height;
+      plotArea.height = plotArea.offsetHeight;
       ctx.strokeStyle = '#bfbfff';
       ctx.lineWidth = 0.5;
       ctx.beginPath();

@@ -14,12 +14,10 @@
   -webkit-text-size-adjust: 100%;
 }
 
-.simulation {
-  margin: 0;
+body {
+  margin: 4;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  text-align: center;
 }
 
 .params {
@@ -72,7 +70,6 @@
 }
 
 .canvas {
-  display: flex;
   background: #1b1b1b;
   border-radius: 0.2rem;
   margin: 0.1rem;
