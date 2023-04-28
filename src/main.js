@@ -125,32 +125,13 @@ function handleModelParamsInputChange(element) {
 }
 
 async function setDefaultModelParams() {
-  let g_l = document.getElementById("g-leak-max");
-  let e_l = document.getElementById("e-leak");
-
-  let g_na = document.getElementById("g-na-max");
-  let e_na = document.getElementById("e-na");
-
-  let g_k = document.getElementById("g-k-max");
-  let e_k = document.getElementById("e-k");
-
-  let g_a = document.getElementById("g-a-max");
-  let e_a = document.getElementById("e-a");
+  const modelInputs = document.querySelectorAll(".model-params input");
+  modelInputs.forEach((input) => {
+    input.defaultValue = defaultModelParams[input.id];
+  });
 
   let stim_0 = document.getElementById("stim-0");
   let stim_1 = document.getElementById("stim-1");
-
-  g_l.defaultValue = defaultModelParams["g-leak-max"];
-  e_l.defaultValue = defaultModelParams["e-leak"];
-
-  g_na.defaultValue = defaultModelParams["g-na-max"];
-  e_na.defaultValue = defaultModelParams["e-na"];
-
-  g_k.defaultValue = defaultModelParams["g-k-max"];
-  e_k.defaultValue = defaultModelParams["e-k"];
-
-  g_a.defaultValue = defaultModelParams["g-a-max"];
-  e_a.defaultValue = defaultModelParams["e-a"];
 
   stim_0.defaultValue = 0.0;
   stim_1.defaultValue = 0.0;
