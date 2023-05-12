@@ -22,11 +22,11 @@
         <div class="row">
           <div class="sim-param-sec">
             <div class="param">
-              <label for="num-ts">num ts</label>
+              <label for="num-ts">N<sub>ts</sub></label>
               <input type="number" id="num-ts">
             </div>
             <div class="param">
-              <label for="delta-t">delta t</label>
+              <label for="delta-t">Δ<sub>t</sub></label>
               <input type="number" id="delta-t">
             </div>
           </div>
@@ -39,49 +39,43 @@
         <div class="row">
           <div class="leak-param-sec">
             <div class="param">
-              <label for="g-leak-max">g leak</label>
+              <label for="g-leak-max">g<sub>leak</sub></label>
               <input type="number" id="g-leak-max">
             </div>
             <div class="param">
-              <label for="e-leak">E leak</label>
+              <label for="e-leak">E<sub>leak</sub></label>
               <input type="number" id="e-leak">
             </div>
           </div>
           <div class="na-param-sec">
             <div class="param">
-              <label for="g-na-max">g na</label>
+              <label for="g-na-max">g<sub>na</sub></label>
               <input type="number" id="g-na-max">
             </div>
             <div class="param">
-              <label for="e-na">E Na</label>
+              <label for="e-na">E<sub>Na</sub></label>
               <input type="number" id="e-na">
             </div>
           </div>
           <div class="k-param-sec">
             <div class="param">
-              <label for="g-k-max">g k</label>
+              <label for="g-k-max">g<sub>k</sub></label>
               <input type="number" id="g-k-max">
             </div>
             <div class="param">
-              <label for="e-k">E K</label>
+              <label for="e-k">E<sub>K</sub></label>
               <input type="number" id="e-k">
             </div>
           </div>
           <div class="a-param-sec">
             <div class="param">
-              <label for="g-a-max">g a</label>
+              <label for="g-a-max">g<sub>a</sub></label>
               <input type="number" id="g-a-max">
             </div>
             <div class="param">
-              <label for="e-a">E a</label>
+              <label for="e-a">E<sub>a</sub></label>
               <input type="number" id="e-a">
             </div>
-          </div>
-        </div>
-        <div class="row" id="state-btns-row">
-          <div class="state-btns">
-            <button id="reset-btn">Reset</button>
-            <button id="rndm-btn">Random</button>
           </div>
         </div>
       </div>
@@ -101,20 +95,13 @@
                 <input type="number" id="stim-curr-0">
               </div>
             </div>
-            <!-- <div class="row">
-              <div class="param">
-                <label for="stim-ts-1">ts</label>
-                <input type="number" id="stim-ts-1">
-              </div>
-              <div class="param">
-                <label for="stim-curr-1">current</label>
-                <input type="number" id="stim-curr-1">
-              </div>
-            </div> -->
           </div>
         </div>
       </div>
     </div>
+      <div class="state-btns">
+        <button id="reset-btn">Reset All</button>
+      </div>
     <div class="canvas" id="canvas">
       <canvas id="plotting-area" height=300></canvas>
     </div>

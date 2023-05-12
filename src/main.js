@@ -18,7 +18,9 @@ const defaultModelParams = {
   "e-a": -75.0
 };
 
+let simParamsAreDefault;
 let modelParamsAreDefault;
+let stimParamsAreDefault;
 
 const plotArea = document.getElementById('plotting-area');
 const plotAreaWrapper = document.getElementById('canvas');
@@ -77,8 +79,9 @@ let na_params = {...default_na_params};
 let k_params = {...default_k_params};
 let a_params = {...default_a_params};
 
-function resetModelParams() {
-  if (!modelParamsAreDefault) {
+function resetParams() {
+  if (!simParamsAreDefault || !modelParamsAreDefault || !stimParamsAreDefault) {
+    simParams = {...defaultSimParams};
     // brute-force my way hee-haw
     g_l = defaultModelParams["g-leak-max"];
     e_l = defaultModelParams["e-leak"];
@@ -87,17 +90,24 @@ function resetModelParams() {
     k_params = {...default_k_params};
     a_params = {...default_a_params};
 
-    const modelInputs = document.querySelectorAll(".model-params input");
-    modelInputs.forEach((input) => {
+    document.querySelectorAll(".sim-params input").forEach((input) => {
       input.value = input.defaultValue;
     });
+
+    document.querySelectorAll(".model-params input").forEach((input) => {
+      input.value = input.defaultValue;
+    });
+
+    simParamsAreDefault = true;
     modelParamsAreDefault = true;
+    stimParamsAreDefault = true;
     invoke_plot_command();
   }
 }
 
 function handleSimParamsInputChange(element) {
   simParams[element.id] = +element.value;
+  if (simParamsAreDefault) simParamsAreDefault = false;
   invoke_plot_command();
 }
 
@@ -219,5 +229,5 @@ document.querySelectorAll(".stim-params input").forEach((input) => {
   input.addEventListener("change", () => handleStimParamsInputChange(input));
 });
 
-document.getElementById("reset-btn").addEventListener("mouseup", () => resetModelParams());
+document.getElementById("reset-btn").addEventListener("mouseup", () => resetParams());
 
