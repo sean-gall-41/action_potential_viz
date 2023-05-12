@@ -15,6 +15,23 @@
 
   <body>
     <div class="params">
+      <div class="sim-params">
+        <div class="row">
+          <h3>Simulation Parameters</h3>
+        </div>
+        <div class="row">
+          <div class="sim-param-sec">
+            <div class="param">
+              <label for="num-ts">num ts</label>
+              <input type="number" id="num-ts">
+            </div>
+            <div class="param">
+              <label for="delta-t">delta t</label>
+              <input type="number" id="delta-t">
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="model-params">
         <div class="row">
           <h3>Model Parameters</h3>
@@ -74,14 +91,26 @@
         </div>
         <div class="row">
           <div class="stim-param-sec">
-            <div class="param">
-              <label for="stim-0">stim 0</label>
-              <input type="number" id="stim-0">
+            <div class="row">
+              <div class="param">
+                <label for="stim-ts-0">ts</label>
+                <input type="number" id="stim-ts-0">
+              </div>
+              <div class="param">
+                <label for="stim-curr-0">current</label>
+                <input type="number" id="stim-curr-0">
+              </div>
             </div>
-            <div class="param">
-              <label for="stim-1">stim 1</label>
-              <input type="number" id="stim-1">
-            </div>
+            <!-- <div class="row">
+              <div class="param">
+                <label for="stim-ts-1">ts</label>
+                <input type="number" id="stim-ts-1">
+              </div>
+              <div class="param">
+                <label for="stim-curr-1">current</label>
+                <input type="number" id="stim-curr-1">
+              </div>
+            </div> -->
           </div>
         </div>
       </div>

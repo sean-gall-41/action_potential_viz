@@ -105,6 +105,7 @@ impl AParams {
 #[tauri::command]
 fn run_and_plot(
     num_ts: u32,
+    delta_t: f32,
     stim: Vec<(f32, f32)>,
     g_l: f32,
     e_l: f32,
@@ -112,7 +113,7 @@ fn run_and_plot(
     mut k_params: KParams,
     mut a_params: AParams) -> Vec<(f32, f32)> {
 
-    let numts = (num_ts as f32 / 0.01) as u32;
+    let numts = (num_ts as f32 / delta_t) as u32;
     let mut v_plot: Vec<(f32, f32)> = vec![(0.0, 0.0); numts as usize];
     let mut na_act_prob = 0.0159f32;
     let mut na_inact_prob = 0.9437f32;
@@ -133,18 +134,18 @@ fn run_and_plot(
         let ts: usize = ts as usize;
     
         na_act_prob += ((1.0 - na_act_prob) * na_params.act_open_rate
-                     - na_act_prob * na_params.act_close_rate) * 0.01;
+                     - na_act_prob * na_params.act_close_rate) * delta_t;
     
         na_inact_prob += ((1.0 - na_inact_prob) * na_params.inact_open_rate
-                       - na_inact_prob * na_params.inact_close_rate) * 0.01;
+                       - na_inact_prob * na_params.inact_close_rate) * delta_t;
     
         k_prob += ((1.0 - k_prob) * k_params.open_rate
-                    - k_prob * k_params.close_rate) * 0.01;
+                    - k_prob * k_params.close_rate) * delta_t;
     
         // update eqns based off of the asymptotic var inf_act and time const tau
-        a_act_prob += 0.01 * (a_params.inf_act - a_act_prob) / a_params.tau_act;
+        a_act_prob += delta_t * (a_params.inf_act - a_act_prob) / a_params.tau_act;
     
-        a_inact_prob += 0.01 * (a_params.inf_inact - a_inact_prob) / a_params.tau_inact;
+        a_inact_prob += delta_t * (a_params.inf_inact - a_inact_prob) / a_params.tau_inact;
 
         voltage += (
                 -g_l * (voltage - e_l)
@@ -152,7 +153,7 @@ fn run_and_plot(
                 - k_params.g_max * k_prob.powf(4.0) * (voltage - k_params.e_rev)
                 - a_params.g_max * a_act_prob.powf(3.0) * a_inact_prob * (voltage - a_params.e_rev)
                 + stim[stim_id-1].1
-                ) * 0.01;
+                ) * delta_t;
         voltage /= mem_c;
 
         v_plot[ts].0 = ts as f32;

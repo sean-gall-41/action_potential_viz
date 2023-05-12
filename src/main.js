@@ -1,5 +1,12 @@
 const { invoke } = window.__TAURI__.tauri;
 
+const defaultSimParams = {
+  "num-ts": 200, // in ms
+  "delta-t": 0.01, // also in ms
+};
+
+let simParams = {...defaultSimParams};
+
 const defaultModelParams = {
   "g-leak-max": 0.3,
   "e-leak": -17.0,
@@ -17,8 +24,9 @@ const plotArea = document.getElementById('plotting-area');
 const plotAreaWrapper = document.getElementById('canvas');
 const ctx = plotArea.getContext('2d');
 
-let num_ts = 200; // in ms
-let stim = [[0, 0.0], [5000, 20.0], [15000, 0.0]];
+let num_ts = 200;
+let d_t = 0.01;
+let stim = [[0, 0.0]];
 let g_l = 0.3;
 let e_l = -17.0;
 
@@ -88,6 +96,11 @@ function resetModelParams() {
   }
 }
 
+function handleSimParamsInputChange(element) {
+  simParams[element.id] = +element.value;
+  invoke_plot_command();
+}
+
 function handleModelParamsInputChange(element) {
   const id = element.id;
   const pcs = id.split("-");
@@ -128,6 +141,13 @@ function handleStimParamsInputChange(element) {
   // TODO: write this function :-)
 }
 
+async function setDefaultSimParams() {
+  const simInputs = document.querySelectorAll(".sim-params input");
+  simInputs.forEach((input) => {
+    input.defaultValue = defaultSimParams[input.id];
+  });
+}
+
 async function setDefaultModelParams() {
   const modelInputs = document.querySelectorAll(".model-params input");
   modelInputs.forEach((input) => {
@@ -136,18 +156,26 @@ async function setDefaultModelParams() {
   modelParamsAreDefault = true;
 }
 
+ /*
+  * assume that the first value of the stim array is [0, 0.0]
+  * also, user sees ts in units of ms
+  */
 async function setDefaultStimParams() {
-  let stim_0 = document.getElementById("stim-0");
-  let stim_1 = document.getElementById("stim-1");
+  let [stim_ts_0, stim_curr_0] = [
+    document.getElementById("stim-ts-0"),
+    document.getElementById("stim-curr-0")
+  ];
 
-  stim_0.defaultValue = 0.0;
-  stim_1.defaultValue = 0.0;
+  stim_ts_0.defaultValue = 20;
+  stim_curr_0.defaultValue = 13;
+  stim.push([+stim_ts_0.value / 0.01, +stim_curr_0.value]);
 }
 
 async function invoke_plot_command() {
   await invoke('run_and_plot',
     {
-      numTs: num_ts,
+      numTs: simParams["num-ts"],
+      deltaT: simParams["delta-t"],
       stim: stim,
       gL: g_l,
       eL: e_l,
@@ -171,12 +199,17 @@ async function invoke_plot_command() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  setDefaultSimParams();
   setDefaultModelParams();
   setDefaultStimParams();
   invoke_plot_command();
 });
 
 window.addEventListener("resize", () =>invoke_plot_command());
+
+document.querySelectorAll(".sim-params input").forEach((input) => {
+  input.addEventListener("change", () => handleSimParamsInputChange(input));
+});
 
 document.querySelectorAll(".model-params input").forEach((input) => {
   input.addEventListener("change", () => handleModelParamsInputChange(input));

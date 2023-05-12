@@ -28,6 +28,21 @@ body {
   padding: 0.2rem 0.2rem;
 }
 
+.sim-params {
+  background: #3f3f3f;
+  border-radius: 0.2rem;
+  margin: 0.2rem;
+}
+
+.sim-params .row {
+  display: flex;
+  justify-content: center;
+}
+
+.sim-params .row h3 {
+  margin: 0.2rem;
+}
+
 .model-params {
   background: #3f3f3f;
   border-radius: 0.2rem;
@@ -41,11 +56,11 @@ body {
 
 .model-params .row {
   display: flex;
+  justify-content: center;
 }
 
 .model-params .row h3 {
   margin: 0.2rem;
-  padding-left: 0.5rem;
 }
 
 .stim-params {
