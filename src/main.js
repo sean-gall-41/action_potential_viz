@@ -26,8 +26,6 @@ const plotArea = document.getElementById('plotting-area');
 const plotAreaWrapper = document.getElementById('canvas');
 const ctx = plotArea.getContext('2d');
 
-let num_ts = 200;
-let d_t = 0.01;
 let stim = [[0, 0.0]];
 let g_l = 0.3;
 let e_l = -17.0;
@@ -193,6 +191,7 @@ async function invoke_plot_command() {
       kParams: k_params,
       aParams: a_params
     }).then((plot) => {
+      // plotting of the main current trace
       let abs_min_y = Math.abs(Math.min(...plot.map((row) => row[1])));
       plotArea.width = plotAreaWrapper.getBoundingClientRect().width;
       plotArea.height = plotArea.offsetHeight;
@@ -202,6 +201,30 @@ async function invoke_plot_command() {
       plot.forEach(([ts, v_val]) => {
         let x = (ts / plot.length) * plotArea.width;
         let y = -(v_val + abs_min_y) * 0.004 * plotArea.height + 0.70 * plotArea.height;
+        ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      // prepare the stim data to plot
+      let stimPlot = [];
+      for (let i = 0; i < stim.length; i++) {
+        stimPlot.push([stim[i][0] * simParams["delta-t"], stim[i][1]]);
+        if (i == stim.length - 1) {
+          stimPlot.push([simParams["num-ts"], stim[i][1]]);
+        } else {
+          stimPlot.push([stim[i+1][0] * simParams["delta-t"], stim[i][1]]);
+        }
+      }
+      
+      // plot the stimulus underneath the current trace
+      ctx.strokeStyle = '#ffffff';
+      ctx.beginPath();
+      let scale = 0.9;
+      stimPlot.forEach(([ts, i_val]) => {
+        let x = (ts / simParams["num-ts"]) * plotArea.width;
+        // DEBUG: ensure user inputs a valid value so that current trace and stim
+        // trace dont overlap
+        let y =  0.95 * plotArea.height - scale * (i_val - stimPlot[0][1]);
         ctx.lineTo(x, y);
       });
       ctx.stroke();
