@@ -157,16 +157,15 @@ function handleStimParamsInputChange(element) {
   if (varType === "ts") {
     if (+element.value > simParams["num-ts"]) {
       errorElem.classList.add("error-show");
-      //element.value = stim[numInSeq+1][0] * simParams["delta-t"];
     } else {
       errorElem.classList.remove("error-show");
-      errorElem.classList.add("error-hide");
       stim[numInSeq+1][0] = +element.value / simParams["delta-t"];
+      invoke_plot_command();
     }
   } else if (varType === "curr") {
     stim[numInSeq+1][1] = +element.value;
+    invoke_plot_command();
   }
-  invoke_plot_command();
 }
 
 async function setDefaultSimParams() {
@@ -270,6 +269,21 @@ document.querySelectorAll(".model-params input").forEach((input) => {
 
 document.querySelectorAll(".stim-params input").forEach((input) => {
   input.addEventListener("change", () => handleStimParamsInputChange(input));
+  input.addEventListener("blur", () => {
+    const id = input.id;
+    const pcs = id.split("-");
+
+    const paramElem = input.parentElement;
+    const errorElem = paramElem.querySelector('.error');
+
+    const varType = pcs[1];
+    const numInSeq = +pcs[2];
+
+    if (errorElem.classList.contains('error-show')) {
+      errorElem.classList.remove("error-show");
+      input.value = stim[numInSeq+1][0] * simParams["delta-t"];
+    }
+  });
 });
 
 document.getElementById("reset-btn").addEventListener("mouseup", () => resetParams());

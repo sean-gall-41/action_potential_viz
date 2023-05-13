@@ -98,6 +98,11 @@ body {
   width: 80%;
 }
 
+.param .error svg {
+  fill: #f6f6f6;
+  padding: 0.0rem 0.3rem 0.0rem 0.2rem;
+}
+
 .param .error-show {
     animation:error-show 200ms;
     display: flex;
