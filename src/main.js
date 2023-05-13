@@ -96,6 +96,17 @@ function resetParams() {
       input.value = input.defaultValue;
     });
 
+    document.querySelectorAll(".stim-params input").forEach((input) => {
+      input.value = input.defaultValue;
+    });
+
+    stim = [[0, 0.0]];
+    let [stim_ts_0, stim_curr_0] = [
+      document.getElementById("stim-ts-0"),
+      document.getElementById("stim-curr-0")
+    ];
+    stim.push([+stim_ts_0.value / defaultSimParams["delta-t"], +stim_curr_0.value]);
+
     simParamsAreDefault = true;
     modelParamsAreDefault = true;
     stimParamsAreDefault = true;
