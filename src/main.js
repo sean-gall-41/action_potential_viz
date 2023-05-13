@@ -113,19 +113,19 @@ function handleModelParamsInputChange(element) {
   const id = element.id;
   const pcs = id.split("-");
   
-  const var_type = pcs[0];
+  const varType = pcs[0];
   let var_name = "";
-  if (var_type === "g") {
-    var_name = var_type + "_max";
-  } else if (var_type === "e") {
-    var_name = var_type + "_rev";
+  if (varType === "g") {
+    var_name = varType + "_max";
+  } else if (varType === "e") {
+    var_name = varType + "_rev";
   }
 
   switch (pcs[1]) {
     case "leak":
-      if (var_type === "g") {
+      if (varType === "g") {
         g_l = +element.value;
-      } else if (var_type === "e") {
+      } else if (varType === "e") {
         e_l = +element.value;
       }
       break;
@@ -146,7 +146,27 @@ function handleModelParamsInputChange(element) {
 }
 
 function handleStimParamsInputChange(element) {
-  // TODO: write this function :-)
+  const id = element.id;
+  const pcs = id.split("-");
+
+  const paramElem = element.parentElement;
+  const errorElem = paramElem.querySelector('.error');
+
+  const varType = pcs[1];
+  const numInSeq = +pcs[2];
+  if (varType === "ts") {
+    if (+element.value > simParams["num-ts"]) {
+      errorElem.classList.add("error-show");
+      //element.value = stim[numInSeq+1][0] * simParams["delta-t"];
+    } else {
+      errorElem.classList.remove("error-show");
+      errorElem.classList.add("error-hide");
+      stim[numInSeq+1][0] = +element.value / simParams["delta-t"];
+    }
+  } else if (varType === "curr") {
+    stim[numInSeq+1][1] = +element.value;
+  }
+  invoke_plot_command();
 }
 
 async function setDefaultSimParams() {
@@ -176,7 +196,7 @@ async function setDefaultStimParams() {
 
   stim_ts_0.defaultValue = 20;
   stim_curr_0.defaultValue = 13;
-  stim.push([+stim_ts_0.value / 0.01, +stim_curr_0.value]);
+  stim.push([+stim_ts_0.value / defaultSimParams["delta-t"], +stim_curr_0.value]);
 }
 
 async function invoke_plot_command() {
@@ -238,7 +258,7 @@ window.addEventListener("DOMContentLoaded", () => {
   invoke_plot_command();
 });
 
-window.addEventListener("resize", () =>invoke_plot_command());
+window.addEventListener("resize", () => invoke_plot_command());
 
 document.querySelectorAll(".sim-params input").forEach((input) => {
   input.addEventListener("change", () => handleSimParamsInputChange(input));
